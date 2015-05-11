@@ -12,6 +12,7 @@ GO
 
 --todo: if exists를 사용하여 PlayerTable 테이블이 존재한다면 해당 테이블 드랍
 
+-- IF EXISTS ( select * from sys.tables where name='PlayerTable' ) 이렇게 더 간단하게도 된다.
 IF EXISTS ( SELECT * FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME = 'PlayerTable' )
 	DROP TABLE [dbo].[PlayerTable]
 GO
@@ -40,7 +41,8 @@ BEGIN
     --todo: 해당 이름의 플레이어를 생성하고 플레이어의 identity를 리턴, [createTime]는 현재 생성 날짜로 설정
 	SET NOCOUNT ON;
 	INSERT INTO PlayerTable (playerName, createTime, isValid) VALUES (@name,  CURRENT_TIMESTAMP, 0);
-	SELECT playerUID FROM PlayerTable WHERE playerName = @name;
+	-- SELECT playerUID FROM PlayerTable WHERE playerName = @name; 이렇게 하면 안되고, 아래것으로.. 
+	SELECT @@IDENTITY 
 END
 GO
 
@@ -55,6 +57,7 @@ BEGIN
 	--todo: 해당 플레이어 삭제
 	SET NOCOUNT ON;
 	DELETE FROM PlayerTable WHERE playerUID = @playerUID;
+	SELECT @@ROWCOUNT -- 적용여부 리턴값을 받아야지?
 END
 GO
 

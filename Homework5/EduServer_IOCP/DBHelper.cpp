@@ -78,6 +78,9 @@ bool DbHelper::Initialize(const wchar_t* connInfoStr, int workerThreadCount)
 			SQL_DRIVER_NOPROMPT //DriverCompletion
 			);
 
+		///# SQLRETURN ret = SQLDriverConnect(mSqlConnPool[i].mSqlHdbc, NULL, (SQLWCHAR*)connInfoStr, (SQLSMALLINT)wcslen(connInfoStr), NULL, 0, &resultLen, SQL_DRIVER_NOPROMPT);
+
+
 		if (SQL_SUCCESS != ret && SQL_SUCCESS_WITH_INFO != ret)
 		{
 			SQLWCHAR sqlState[1024] = { 0, } ;
@@ -179,6 +182,8 @@ bool DbHelper::BindParamInt(int* param)
 		NULL
 		);
 
+	///#이렇게: SQLRETURN ret = SQLBindParameter(mCurrentSqlHstmt, mCurrentBindParam++, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 10, 0, param, 0, NULL);
+
 	if (SQL_SUCCESS != ret && SQL_SUCCESS_WITH_INFO != ret)
 	{
 		PrintSqlStmtError();
@@ -212,6 +217,8 @@ bool DbHelper::BindParamBool(bool* param)
 		SQL_C_BIT, SQL_BIT,
 		0, 0, param, 0, NULL
 		);
+
+	///# 불은 1바이트로 맵핑: SQLRETURN ret = SQLBindParameter(mCurrentSqlHstmt, mCurrentBindParam++, SQL_PARAM_INPUT, SQL_C_TINYINT, SQL_TINYINT, 3, 0, param, 0, NULL);
 
 	if (SQL_SUCCESS != ret && SQL_SUCCESS_WITH_INFO != ret)
 	{
@@ -294,7 +301,7 @@ void DbHelper::BindResultColumnText(wchar_t* text, size_t count)
 		mCurrentResultCol++,
 		SQL_C_WCHAR, //CType
 		text, //dstPointer
-		count, //BufferSize 
+		count*2, //BufferSize  여기서 wchar_t는 2바이트
 		&len //결과 length
 		);
 
