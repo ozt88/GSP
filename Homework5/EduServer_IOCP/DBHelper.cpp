@@ -68,17 +68,15 @@ bool DbHelper::Initialize(const wchar_t* connInfoStr, int workerThreadCount)
 		
 		//DONE: SQLDriverConnect를 이용하여 SQL서버에 연결하고 그 핸들을 SQL_CONN의 mSqlHdbc에 할당
 		SQLRETURN ret = SQLDriverConnect(
-			mSqlConnPool[i].mSqlHdbc, //Connection Handle
-			NULL, //WindowHandle 거의안씀
-			(SQLWCHAR *)connInfoStr,//InConnectionString
-			SQL_NTS, //StringLength, NULL종료
-			NULL, //OutConnectionString
-			0, //StringLength
-			&resultLen, //StringLength2Ptr
-			SQL_DRIVER_NOPROMPT //DriverCompletion
+			mSqlConnPool[i].mSqlHdbc, 
+			NULL, 
+			(SQLWCHAR*)connInfoStr, 
+			(SQLSMALLINT)wcslen(connInfoStr), 
+			NULL, 
+			0, 
+			&resultLen, 
+			SQL_DRIVER_NOPROMPT
 			);
-
-		///# SQLRETURN ret = SQLDriverConnect(mSqlConnPool[i].mSqlHdbc, NULL, (SQLWCHAR*)connInfoStr, (SQLSMALLINT)wcslen(connInfoStr), NULL, 0, &resultLen, SQL_DRIVER_NOPROMPT);
 
 
 		if (SQL_SUCCESS != ret && SQL_SUCCESS_WITH_INFO != ret)
@@ -171,18 +169,16 @@ bool DbHelper::BindParamInt(int* param)
 	//DONE: int형 파라미터 바인딩
 	SQLRETURN ret = SQLBindParameter(
 		mCurrentSqlHstmt, 
-		mCurrentBindParam++,
-		SQL_PARAM_INPUT, //input / output
-		SQL_C_LONG, //변수의 c타입
-		SQL_IS_INTEGER,//변수의 sql타입
-		0, //컬럼의 precision
-		0, //컬럼의 scale
-		param, //바인딩 버퍼 포인터
-		0, //버퍼 사이즈
+		mCurrentBindParam++, 
+		SQL_PARAM_INPUT, 
+		SQL_C_LONG, 
+		SQL_INTEGER, 
+		10, 
+		0, 
+		param, 
+		0, 
 		NULL
 		);
-
-	///#이렇게: SQLRETURN ret = SQLBindParameter(mCurrentSqlHstmt, mCurrentBindParam++, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 10, 0, param, 0, NULL);
 
 	if (SQL_SUCCESS != ret && SQL_SUCCESS_WITH_INFO != ret)
 	{
@@ -210,15 +206,19 @@ bool DbHelper::BindParamFloat(float* param)
 bool DbHelper::BindParamBool(bool* param)
 {
 	//DONE: bool형 파라미터 바인딩
-	SQLRETURN ret = SQLBindParameter(
-		mCurrentSqlHstmt,
-		mCurrentBindParam++,
-		SQL_PARAM_INPUT,
-		SQL_C_BIT, SQL_BIT,
-		0, 0, param, 0, NULL
-		);
 
-	///# 불은 1바이트로 맵핑: SQLRETURN ret = SQLBindParameter(mCurrentSqlHstmt, mCurrentBindParam++, SQL_PARAM_INPUT, SQL_C_TINYINT, SQL_TINYINT, 3, 0, param, 0, NULL);
+	SQLRETURN ret = SQLBindParameter(
+		mCurrentSqlHstmt, 
+		mCurrentBindParam++, 
+		SQL_PARAM_INPUT, 
+		SQL_C_TINYINT, 
+		SQL_TINYINT, 
+		3, 
+		0, 
+		param, 
+		0, 
+		NULL
+		);
 
 	if (SQL_SUCCESS != ret && SQL_SUCCESS_WITH_INFO != ret)
 	{
