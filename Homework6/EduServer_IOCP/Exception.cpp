@@ -35,7 +35,7 @@ void MakeDump(EXCEPTION_POINTERS* e)
 	exceptionInfo.ExceptionPointers = e;
 	exceptionInfo.ClientPointers = FALSE;
 
-	//todo: MiniDumpWriteDump를 사용하여 hFile에 덤프 기록
+	//DONE: MiniDumpWriteDump를 사용하여 hFile에 덤프 기록
 	MiniDumpWriteDump(
 		GetCurrentProcess(), 
 		GetCurrentProcessId(), 
@@ -75,7 +75,7 @@ LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS* exceptionInfo)
 		{
 			do
 			{
-				//todo: 내 프로세스 내의 스레드중 나 자신 스레드만 빼고 멈추게..
+				//DONE: 내 프로세스 내의 스레드중 나 자신 스레드만 빼고 멈추게..
 				if(te32.th32OwnerProcessID == myProcessId && te32.th32ThreadID != myThreadId)
 				{
 					HANDLE hThread = OpenThread(THREAD_ALL_ACCESS, FALSE, te32.th32ThreadID);
@@ -118,7 +118,7 @@ LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS* exceptionInfo)
 	/// 콜스택도 남기고
 	historyOut << "========== Exception Call Stack ==========" << std::endl << std::endl;
 
-	//todo: StackWalker를 사용하여 historyOut에 현재 스레드의 콜스택 정보 남기기
+	//DONE: StackWalker를 사용하여 historyOut에 현재 스레드의 콜스택 정보 남기기
 	StackWalker stackWalker(myProcessId, GetCurrentProcess());
 	stackWalker.SetOutputStream(&historyOut);
 	stackWalker.ShowCallstack();

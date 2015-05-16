@@ -5,7 +5,7 @@
 
 void ThreadCallHistory::DumpOut(std::ostream& ost)
 {
-	//todo: 현재 스레드의 call history를 ost 스트림에 쓰기
+	//DONE: 현재 스레드의 call history를 ost 스트림에 쓰기
 	uint64_t count = mCounter < MAX_HISTORY ? mCounter : MAX_HISTORY;
 
 	ost << "===== Recent Call History [Thread:" << mThreadId << "]" << std::endl;
@@ -41,7 +41,7 @@ namespace LoggerUtil
 
 	void EventLogDumpOut(std::ostream& ost)
 	{
-		//todo: gLogEvents내용 ost 스트림에 쓰기
+		//DONE: gLogEvents내용 ost 스트림에 쓰기
 		uint64_t count = gCurrentLogIndex < MAX_LOG_SIZE ? gCurrentLogIndex : MAX_LOG_SIZE;
 
 		ost << "===== Log Events" << std::endl;

@@ -48,7 +48,7 @@ void Player::ResponseLoad(int pid, float x, float y, float z, bool valid, wchar_
 
 void Player::RequestUpdatePosition(float x, float y, float z)
 {
-	//todo: DB에 플레이어 위치를 x,y,z로 업데이트 요청하기
+	//DONE: DB에 플레이어 위치를 x,y,z로 업데이트 요청하기
 	UpdatePlayerPositionContext* context = new UpdatePlayerPositionContext(mSession, mPlayerId);
 	context->mPosX = x;
 	context->mPosY = y;
@@ -93,14 +93,14 @@ void Player::ResponseUpdateValidation(bool isValid)
 
 void Player::TestCreatePlayerData(const wchar_t* newName)
 {
-	//todo: DB스레드풀에 newName에 해당하는 플레이어 생성 작업을 수행시켜보기
+	//DONE: DB스레드풀에 newName에 해당하는 플레이어 생성 작업을 수행시켜보기
 	CreatePlayerDataContext* context = new CreatePlayerDataContext(mSession, newName);
 	GDatabaseManager->PostDatabsaseRequest(context);
 }
 
 void Player::TestDeletePlayerData(int playerId)
 {
-	//todo: DB스레드풀에 playerId에 해당하는 플레이어 생성 삭제 작업을 수행시켜보기
+	//DONE: DB스레드풀에 playerId에 해당하는 플레이어 생성 삭제 작업을 수행시켜보기
 	DeletePlayerDataContext* context = new DeletePlayerDataContext(mSession, playerId);
 	GDatabaseManager->PostDatabsaseRequest(context);
 }

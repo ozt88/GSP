@@ -44,7 +44,7 @@ void IOThread::DoIocpJob()
 
 	if (CK_DB_RESULT == completionKey)
 	{
-		//todo: DB 처리 결과가 담겨오는 경우 처리
+		//DONE: DB 처리 결과가 담겨오는 경우 처리
 		DatabaseJobContext* dbContext = reinterpret_cast<DatabaseJobContext*>(overlapped);
 		dbContext->OnResult();
 		delete dbContext;

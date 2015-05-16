@@ -83,7 +83,7 @@ unsigned int WINAPI DBManager::DbWorkerThread(LPVOID lpParam)
 
 void DBManager::PostDatabsaseRequest(DatabaseJobContext* dbContext)
 {
-	//todo: PQCS를 이용하여 dbContext를 mDbCompletionPort에 보내기
+	//DONE: PQCS를 이용하여 dbContext를 mDbCompletionPort에 보내기
 	if(FALSE == PostQueuedCompletionStatus(mDbCompletionPort, 0, (ULONG_PTR) CK_DB_REQUEST, (LPOVERLAPPED) dbContext))
 	{
 		printf_s("DBManager::PostDatabaseResult PostQueuedCompletionStatus Error: %d\n", GetLastError());

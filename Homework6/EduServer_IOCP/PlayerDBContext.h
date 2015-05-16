@@ -2,7 +2,7 @@
 #include "ContentsConfig.h"
 #include "DBContext.h"
 
-//todo: Player 생성 작업 DB context만들기
+//DONE: Player 생성 작업 DB context만들기
 struct CreatePlayerDataContext 
 	: public DatabaseJobContext, public ObjectPool<CreatePlayerDataContext>
 {
@@ -20,7 +20,7 @@ struct CreatePlayerDataContext
 	wchar_t	mPlayerName[MAX_NAME_LEN];
 };
 
-//todo: Player 삭제 작업 DB context 만들기
+//DONE: Player 삭제 작업 DB context 만들기
 struct DeletePlayerDataContext 
 	: public DatabaseJobContext, public ObjectPool<DeletePlayerDataContext>
 {

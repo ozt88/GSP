@@ -6,7 +6,7 @@
 #include "ClientSession.h"
 
 
-//todo: CreatePlayerDataContext 구현
+//DONE: CreatePlayerDataContext 구현
 
 bool CreatePlayerDataContext::OnSQLExecute()
 {
@@ -35,7 +35,7 @@ void CreatePlayerDataContext::OnFail()
 	EVENT_LOG("CreatePlayerDataContext fail", mPlayerId);
 }
 
-//todo: DeletePlayerDataContext 구현
+//DONE: DeletePlayerDataContext 구현
 bool DeletePlayerDataContext::OnSQLExecute()
 {
 	DBHelper dbHelper;
@@ -53,6 +53,9 @@ bool DeletePlayerDataContext::OnSQLExecute()
 
 void DeletePlayerDataContext::OnSuccess()
 {
+	EVENT_LOG("DeletePlayerDataContext Success", mPlayerId);
+	/*
+	//exception 발생 코드
 	__try
 	{
 		CRASH_ASSERT(false);
@@ -61,6 +64,7 @@ void DeletePlayerDataContext::OnSuccess()
 	{
 
 	}
+	*/
 }
 
 void DeletePlayerDataContext::OnFail()
@@ -97,7 +101,7 @@ bool LoadPlayerDataContext::OnSQLExecute()
 
 void LoadPlayerDataContext::OnSuccess()
 {
-	//todo: 플레이어 로드 성공시 처리하기
+	//DONE: 플레이어 로드 성공시 처리하기
 	mSessionObject->mPlayer.ResponseLoad(mPlayerId, mPosX, mPosY, mPosZ, mIsValid, mPlayerName, mComment);
 }
 
