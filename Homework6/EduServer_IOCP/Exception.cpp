@@ -119,7 +119,7 @@ LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS* exceptionInfo)
 	historyOut << "========== Exception Call Stack ==========" << std::endl << std::endl;
 
 	//DONE: StackWalker를 사용하여 historyOut에 현재 스레드의 콜스택 정보 남기기
-	StackWalker stackWalker(myProcessId, GetCurrentProcess());
+	StackWalker stackWalker(myProcessId, GetCurrentProcess()); ///# default 생성자 써도 되는데.. 
 	stackWalker.SetOutputStream(&historyOut);
 	stackWalker.ShowCallstack();
 	

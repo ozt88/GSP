@@ -162,7 +162,7 @@ void ClientSession::OnDisconnect(DisconnectReason dr)
 	TRACE_THIS;
 
 	//TEST: 접속 종료하면 DB에서 삭제
-	mPlayer.TestDeletePlayerData(mPlayer.mPlayerId);
+	mPlayer.TestDeletePlayerData(mPlayer.mPlayerId); ///# 접속시 생성하고 종료시 삭제하고 ... 테스트니까 이렇게 한거지? ㅎㅎ
 
 	printf_s("[DEBUG] Client Disconnected: Reason=%d IP=%s, PORT=%d \n", dr, inet_ntoa(mClientAddr.sin_addr), ntohs(mClientAddr.sin_port));
 }
