@@ -141,17 +141,17 @@ void IOThread::DoIocpJob()
 
 void IOThread::DoSendJob()
 {
-	while (!LSendRequestSessionList->empty())
+	while(!LSendRequestSessionList->empty())
 	{
 		auto& session = LSendRequestSessionList->front();
-	
-		if (session->FlushSend())
+		if(!session->FlushSend())
 		{
-			/// true 리턴 되면 빼버린다.
-			LSendRequestSessionList->pop_front();
+			LSendFailedSessionList->push_back(session);
 		}
+		LSendRequestSessionList->pop_front();
 	}
-	
+	LSendRequestSessionList->clear();
+	std::swap(LSendFailedSessionList, LSendRequestSessionList);
 }
 
 void IOThread::DoTimerJob()

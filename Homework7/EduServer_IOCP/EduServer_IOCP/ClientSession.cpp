@@ -168,3 +168,33 @@ void ClientSession::OnRelease()
 	GClientSessionManager->ReturnClientSession(this);
 }
 
+bool ClientSession::SendResponse(short packetType, const protobuf::MessageLite& payload)
+{
+	if(!IsConnected())
+		return false;
+
+	FastSpinlockGuard criticalSection(mSendBufferLock);
+
+	int totalSize = payload.ByteSize() + HEADER_SIZE;
+	if(mSendBuffer.GetFreeSpaceSize() < totalSize)
+		return false;
+
+	protobuf::io::ArrayOutputStream arrayOutputStream(mSendBuffer.GetBuffer(), totalSize);
+	protobuf::io::CodedOutputStream codedOutputStream(&arrayOutputStream);
+
+	PacketHeader header;
+	header.mSize = payload.ByteSize();
+	header.mType = packetType;
+
+	codedOutputStream.WriteRaw(&header, HEADER_SIZE);
+	payload.SerializeToCodedStream(&codedOutputStream);
+
+
+	/// flush later...
+	LSendRequestSessionList->push_back(this);
+
+	mSendBuffer.Commit(totalSize);
+
+	return true;
+}
+

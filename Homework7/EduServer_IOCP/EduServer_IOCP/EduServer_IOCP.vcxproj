@@ -223,6 +223,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Protobuf\MyPacket.proto" />
+    <None Include="..\..\SQL\GameDB.sql" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

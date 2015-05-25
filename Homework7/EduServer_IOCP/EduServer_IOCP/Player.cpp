@@ -9,6 +9,7 @@
 #include "PacketType.h"
 #include "BroadcastManager.h"
 #include "MyPacket.pb.h"
+#include "Log.h"
 
 using namespace MyPacket;
 
@@ -30,42 +31,81 @@ void Player::PlayerReset()
 	mPosX = mPosY = mPosZ = 0;
 }
 
+void Player::RequestCreate(const wchar_t* name)
+{
+	CreatePlayerDataContext* context = new CreatePlayerDataContext(mSession);
+	context->SetNewName(name);
+	GDatabaseManager->PostDatabsaseRequest(context);
+}
+
+void Player::ResponseCreate(bool success, int pid, wchar_t* name)
+{
+	CreateResponse outPacket;
+	if(success)
+	{
+		mPlayerId = pid;
+		outPacket.set_playerid(pid);
+		wcscpy_s(mPlayerName, name);
+	}
+	else
+	{
+		outPacket.set_playerid(-1);
+	}
+	mSession->SendResponse(PKT_SC_CREATE, outPacket);
+}
+
 void Player::RequestLoad(int pid)
 {
  	LoadPlayerDataContext* context = new LoadPlayerDataContext(mSession, pid);
  	GDatabaseManager->PostDatabsaseRequest(context);
 }
 
-void Player::ResponseLoad(int pid, float x, float y, float z, bool valid, wchar_t* name, wchar_t* comment)
+void Player::ResponseLoad(bool success, int pid, float x, float y, float z, bool valid, wchar_t* name, wchar_t* comment)
 {
-	mPlayerId = pid;
-	mPosX = x;
-	mPosY = y;
-	mPosZ = z;
-	mIsValid = valid;
-
-	wcscpy_s(mPlayerName, name);
-	wcscpy_s(mComment, comment);
-
-	//TODO: 아래는 나중에 로그로...
-	wprintf_s(L"PID[%d], X[%f] Y[%f] Z[%f] NAME[%s] COMMENT[%s]\n", mPlayerId, mPosX, mPosY, mPosZ, mPlayerName, mComment);
-	
-	DoSyncAfter(HEART_BEAT, GetSharedFromThis<Player>(), &Player::OnTick);
-
 	LoginResult outPacket;
-
-	outPacket.set_playerid(mPlayerId);
-	MyPacket::Position* pos = new MyPacket::Position();
-	pos->set_x(mPosX);
-	pos->set_y(mPosY);
-	pos->set_z(mPosZ);
-	outPacket.set_allocated_playerpos(pos);
-
-	std::wstring inName = mPlayerName;
+	Position* pos = new Position();
 	std::string outName;
-	outName.assign(inName.begin(), inName.end());
+
+	if(success)
+	{
+		mPlayerId = pid;
+		mPosX = x;
+		mPosY = y;
+		mPosZ = z;
+		mIsValid = valid;
+
+		wcscpy_s(mPlayerName, name);
+		wcscpy_s(mComment, comment);
+
+		outPacket.set_playerid(mPlayerId);
+		pos->set_x(mPosX);
+		pos->set_y(mPosY);
+		pos->set_z(mPosZ);
+
+		std::wstring inName = mPlayerName;
+		outName.assign(inName.begin(), inName.end());
+
+		DoSyncAfter(HEART_BEAT, GetSharedFromThis<Player>(), &Player::OnTick);
+	}
+	else
+	{
+		outPacket.set_playerid(-1);
+		pos->set_x(0.f);
+		pos->set_y(0.f);
+		pos->set_z(0.f);
+		outName = "";
+	}
+	std::stringstream reslog;
+	reslog << "LOG: ResponseLoad : PID["<< mPlayerId << "], X["<< mPosX << "], Y[" << mPosY << "], Z["<<mPosZ << "], NAME["<<mPlayerName<< "], COMMENT["<<mComment << "]"<< std::endl;
+	std::string logString = reslog.str();
+
+	EVENT_LOG(logString.c_str(), 0);
+	std::cout << logString;
+
+	outPacket.set_allocated_playerpos(pos);
 	outPacket.set_playername(outName);
-	mSession->PostSend((const char*)&outPacket, outPacket.ByteSize());
+	mSession->SendResponse(PKT_SC_LOGIN, outPacket);
+
 }
 
 void Player::RequestUpdatePosition(float x, float y, float z)
@@ -77,20 +117,32 @@ void Player::RequestUpdatePosition(float x, float y, float z)
 	GDatabaseManager->PostDatabsaseRequest(context);
 }
 
-void Player::ResponseUpdatePosition(float x, float y, float z)
+void Player::ResponseUpdatePosition(bool success, float x, float y, float z)
 {
-	mPosX = x;
-	mPosY = y;
-	mPosZ = z;
-
 	MoveResult outPacket;
-	outPacket.set_playerid(mPlayerId);
-	MyPacket::Position* pos = new MyPacket::Position();
-	pos->set_x(mPosX);
-	pos->set_y(mPosY);
-	pos->set_z(mPosZ);
+	Position* pos = new Position();
+
+	if(success)
+	{
+		mPosX = x;
+		mPosY = y;
+		mPosZ = z;
+
+		outPacket.set_playerid(mPlayerId);
+		pos->set_x(mPosX);
+		pos->set_y(mPosY);
+		pos->set_z(mPosZ);
+	}
+	else
+	{
+		pos->set_x(0.f);
+		pos->set_y(0.f);
+		pos->set_z(0.f);
+		outPacket.set_playerid(-1);
+	}
+
 	outPacket.set_allocated_playerpos(pos);
-	mSession->PostSend((const char*)&outPacket, outPacket.ByteSize());
+	mSession->SendResponse(PKT_SC_MOVE, outPacket);
 }
 
 void Player::RequestUpdateComment(const wchar_t* comment)
@@ -100,9 +152,31 @@ void Player::RequestUpdateComment(const wchar_t* comment)
 	GDatabaseManager->PostDatabsaseRequest(context);
 }
 
-void Player::ResponseUpdateComment(const wchar_t* comment)
+void Player::ResponseUpdateComment(bool success, const wchar_t* comment)
 {
-	wcscpy_s(mComment, comment);
+	ChatResult outPacket;
+	std::wstring inComment;
+	std::wstring inName;
+	std::string outComment;
+	std::string outName;
+	if(success)
+	{
+		inComment = comment;
+		inName = mPlayerName;
+		wcscpy_s(mComment, comment);
+	}
+	else
+	{
+		inComment = L"";
+		inName = L"";
+	}
+
+	outComment.assign(inComment.begin(), inComment.end());
+	outName.assign(inName.begin(), inName.end());
+
+	outPacket.set_playermessage(outComment.c_str());
+	outPacket.set_playername(outName.c_str());
+	mSession->SendResponse(PKT_SC_CHAT, outPacket);
 }
 
 void Player::RequestUpdateValidation(bool isValid)
@@ -112,8 +186,12 @@ void Player::RequestUpdateValidation(bool isValid)
 	GDatabaseManager->PostDatabsaseRequest(context);
 }
 
-void Player::ResponseUpdateValidation(bool isValid)
+void Player::ResponseUpdateValidation(bool success, bool isValid)
 {
+	if(success)
+	{
+		isValid = false;
+	}
 	mIsValid = isValid;
 }
 
@@ -145,6 +223,7 @@ void Player::OnTick()
 
 	DoSyncAfter(HEART_BEAT, GetSharedFromThis<Player>(), &Player::OnTick);
 }
+
 
 
 

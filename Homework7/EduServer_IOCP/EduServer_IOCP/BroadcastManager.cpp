@@ -41,9 +41,12 @@ void BroadcastManager::BroadcastPacket(google::protobuf::MessageLite* pkt)
 
 	for (auto it : mConnectedClientSet)
 	{
-		if ( false == it->PostSend((const char*)pkt, pkt->ByteSize()) )
+		if ( false ==  it->SendResponse(MyPacket::PKT_SC_CHAT, *pkt))
 		{
 			it->DisconnectRequest(DR_ACTIVE);
+			delete pkt;
 		}
 	}
+
+	delete pkt;
 }

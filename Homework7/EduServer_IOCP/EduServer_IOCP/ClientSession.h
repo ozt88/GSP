@@ -3,6 +3,7 @@
 #include "MemoryPool.h"
 #include "Session.h"
 #include "Player.h"
+#include "PacketType.h"
 
 class ClientSessionManager;
 
@@ -16,12 +17,8 @@ public:
 
 	bool PostAccept();
 	void AcceptCompletion();
-	
-	template <class PKT_TYPE>
-	bool ParsePacket(PKT_TYPE& pkt)
-	{
-		return mRecvBuffer.Read((char*)&pkt, pkt.ByteSize());
-	}
+
+	bool SendResponse(short packetType, const protobuf::MessageLite& payload);
 
 	virtual void OnRead(size_t len);
 	virtual void OnDisconnect(DisconnectReason dr);

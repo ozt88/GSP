@@ -14,17 +14,21 @@ public:
 	bool IsValid() { return mPlayerId > 0; }
 	int  GetPlayerId() { return mPlayerId;  }
 	std::wstring GetPlayerName(){ return mPlayerName; }
+
+	void RequestCreate(const wchar_t* name);
+	void ResponseCreate(bool success, int pid, wchar_t* name);
+
 	void RequestLoad(int pid);
-	void ResponseLoad(int pid, float x, float y, float z, bool valid, wchar_t* name, wchar_t* comment);
+	void ResponseLoad(bool success, int pid, float x, float y, float z, bool valid, wchar_t* name, wchar_t* comment);
 
 	void RequestUpdatePosition(float x, float y, float z);
-	void ResponseUpdatePosition(float x, float y, float z);
+	void ResponseUpdatePosition(bool success, float x, float y, float z);
 
 	void RequestUpdateComment(const wchar_t* comment);
-	void ResponseUpdateComment(const wchar_t* comment);
+	void ResponseUpdateComment(bool success, const wchar_t* comment);
 
 	void RequestUpdateValidation(bool isValid);
-	void ResponseUpdateValidation(bool isValid);
+	void ResponseUpdateValidation(bool success, bool isValid);
 
 	void OnTick(); ///< 로그인후 1초마다 불리는 기능
 

@@ -16,18 +16,22 @@ bool CreatePlayerDataContext::OnSQLExecute()
 	int result = 0;
 
 	dbHelper.BindParamText(mPlayerName);
-	dbHelper.BindResultColumnInt(&result);
+	dbHelper.BindResultColumnInt(&mPlayerId);
 
 	if (dbHelper.Execute(SQL_CreatePlayer))
 	{
 		if (dbHelper.FetchRow())
 		{
-			/// 적용받은 행이 하나도 없다면, 실패라고 간주하자
-			return result != 0;
+			return true;
 		}
 	}
 
 	return false;
+}
+
+void CreatePlayerDataContext::OnSuccess()
+{
+	mSessionObject->mPlayer->DoSync(&Player::ResponseCreate, true,  mPlayerId, mPlayerName);
 }
 
 void CreatePlayerDataContext::OnFail()
@@ -39,7 +43,12 @@ void CreatePlayerDataContext::OnFail()
 	EVENT_LOG(logErr.c_str(), 0);
 	std::cout << logErr;
 
+
+	mPlayerId = -1;
+
+	mSessionObject->mPlayer->DoSync(&Player::ResponseCreate, false, mPlayerId, mPlayerName);
 }
+
 
 bool DeletePlayerDataContext::OnSQLExecute()
 {
@@ -101,13 +110,21 @@ bool LoadPlayerDataContext::OnSQLExecute()
 void LoadPlayerDataContext::OnSuccess()
 {
 	//mSessionObject->mPlayer->ResponseLoad(mPlayerId, mPosX, mPosY, mPosZ, mIsValid, mPlayerName, mComment);
-	mSessionObject->mPlayer->DoSync(&Player::ResponseLoad, mPlayerId, mPosX, mPosY, mPosZ, mIsValid, mPlayerName, mComment);
+	mSessionObject->mPlayer->DoSync(&Player::ResponseLoad, true, mPlayerId, mPosX, mPosY, mPosZ, mIsValid, mPlayerName, mComment);
 }
 
 void LoadPlayerDataContext::OnFail()
 {
-	EVENT_LOG("LoadPlayerDataContext fail", mPlayerId);
-	mSessionObject->DisconnectRequest(DR_COMPLETION_ERROR);
+	std::stringstream dbfail;
+	dbfail << "LOG: DB_FAIL at " << typeid( this ).name() << std::endl;
+	std::string logErr = dbfail.str();
+
+	EVENT_LOG(logErr.c_str(), mPlayerId);
+	std::cout << logErr;
+
+	//실패시 ID = -1로 해서 클라이언트에게 전송한다.
+	mPlayerId = -1;
+	mSessionObject->mPlayer->DoSync(&Player::ResponseLoad, false, mPlayerId, mPosX, mPosY, mPosZ, mIsValid, mPlayerName, mComment);
 }
 
 
@@ -136,7 +153,12 @@ bool UpdatePlayerPositionContext::OnSQLExecute()
 
 void UpdatePlayerPositionContext::OnSuccess()
 {
-	mSessionObject->mPlayer->DoSync(&Player::ResponseUpdatePosition, mPosX, mPosY, mPosZ);
+	mSessionObject->mPlayer->DoSync(&Player::ResponseUpdatePosition, true, mPosX, mPosY, mPosZ);
+}
+
+void UpdatePlayerPositionContext::OnFail()
+{
+	mSessionObject->mPlayer->DoSync(&Player::ResponseUpdatePosition, false, mPosX, mPosY, mPosZ);
 }
 
 
@@ -170,7 +192,7 @@ void UpdatePlayerCommentContext::SetNewComment(const wchar_t* comment)
 void UpdatePlayerCommentContext::OnSuccess()
 {
 	//mSessionObject->mPlayer->ResponseUpdateComment(mComment);
-	mSessionObject->mPlayer->DoSync(&Player::ResponseUpdateComment, const_cast<const wchar_t*>(mComment));
+	mSessionObject->mPlayer->DoSync(&Player::ResponseUpdateComment, true, const_cast<const wchar_t*>(mComment));
 }
 
 
@@ -199,7 +221,7 @@ bool UpdatePlayerValidContext::OnSQLExecute()
 void UpdatePlayerValidContext::OnSuccess()
 {
 	//mSessionObject->mPlayer->ResponseUpdateValidation(mIsValid);
-	mSessionObject->mPlayer->DoSync(&Player::ResponseUpdateValidation, mIsValid);
+	mSessionObject->mPlayer->DoSync(&Player::ResponseUpdateValidation, true, mIsValid);
 }
 
 

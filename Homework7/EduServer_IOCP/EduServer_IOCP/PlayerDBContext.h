@@ -11,10 +11,12 @@ struct CreatePlayerDataContext : public DatabaseJobContext, public ObjectPool<Cr
 	}
 
 	virtual bool OnSQLExecute();
+	virtual void OnSuccess();
 	virtual void OnFail();
 
 	void SetNewName(const wchar_t* name);
 
+	int mPlayerId = -1;
 	wchar_t	mPlayerName[MAX_NAME_LEN];
 };
 
@@ -46,10 +48,10 @@ struct LoadPlayerDataContext : public DatabaseJobContext, public ObjectPool<Load
 	virtual void OnFail();
 
 	int		mPlayerId = -1;
-	float	mPosX;
-	float	mPosY;
-	float	mPosZ;
-	bool	mIsValid;
+	float	mPosX = 0.f;
+	float	mPosY = 0.f;
+	float	mPosZ = 0.f;
+	bool	mIsValid = false;
 	wchar_t	mPlayerName[MAX_NAME_LEN];
 	wchar_t	mComment[MAX_COMMENT_LEN];
 
@@ -69,7 +71,7 @@ struct UpdatePlayerPositionContext : public DatabaseJobContext, public ObjectPoo
 
 	virtual bool OnSQLExecute();
 	virtual void OnSuccess();
-	virtual void OnFail() {}
+	virtual void OnFail();
 
 	int		mPlayerId = -1;
 	float	mPosX;

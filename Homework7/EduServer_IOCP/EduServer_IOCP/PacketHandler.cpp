@@ -66,7 +66,7 @@ void ClientSession::OnRead(size_t len)
 		if(packetheader.mType >= PKT_MAX || packetheader.mType <= 0)
 		{
 			DisconnectRequest(DR_ACTIVE);
-			break;;
+			break;
 		}
 
 		/// payload 읽기
@@ -87,9 +87,9 @@ void ClientSession::OnRead(size_t len)
 REGISTER_HANDLER(PKT_CS_LOGIN)
 {
 	LoginRequest inPacket;
-	if (false == session->ParsePacket(inPacket))
+	if(false == inPacket.ParseFromCodedStream(&payloadStream))
 	{
-		LoggerUtil::EventLog("packet parsing error", PKT_CS_LOGIN);
+		EVENT_LOG("packet parsing error", PKT_CS_LOGIN);
 		return;
 	}
 	
@@ -101,15 +101,15 @@ REGISTER_HANDLER(PKT_CS_LOGIN)
 REGISTER_HANDLER(PKT_CS_MOVE)
 {
 	MoveRequest inPacket;
-	if (false == session->ParsePacket(inPacket))
+	if(false == inPacket.ParseFromCodedStream(&payloadStream))
 	{
-		LoggerUtil::EventLog("packet parsing error", PKT_CS_MOVE);
+		EVENT_LOG("packet parsing error", PKT_CS_MOVE);
 		return;
 	}
 
 	if (inPacket.playerid() != session->mPlayer->GetPlayerId())
 	{
-		LoggerUtil::EventLog("PKT_CS_MOVE: invalid player ID", session->mPlayer->GetPlayerId());
+		EVENT_LOG("PKT_CS_MOVE: invalid player ID", session->mPlayer->GetPlayerId());
 		return;
 	}
 
@@ -121,27 +121,42 @@ REGISTER_HANDLER(PKT_CS_MOVE)
 REGISTER_HANDLER(PKT_CS_CHAT)
 {
 	ChatRequest inPacket;
-	if (false == session->ParsePacket(inPacket))
+	if(false == inPacket.ParseFromCodedStream(&payloadStream))
 	{
-		LoggerUtil::EventLog("packet parsing error", PKT_CS_CHAT);
+		EVENT_LOG("packet parsing error", PKT_CS_CHAT);
 		return;
 	}
 
 	if (inPacket.playerid() != session->mPlayer->GetPlayerId())
 	{
-		LoggerUtil::EventLog("PKT_CS_CHAT: invalid player ID", session->mPlayer->GetPlayerId());
+		EVENT_LOG("PKT_CS_CHAT: invalid player ID", session->mPlayer->GetPlayerId());
 		return;
 	}
 
 	/// chatting의 경우 여기서 바로 방송
-	ChatResult outPacket;
+	ChatResult* outPacket = new ChatResult();
 	std::wstring& inName = session->mPlayer->GetPlayerName();
 	std::string outName;
 	outName.assign(inName.begin(), inName.end());
-	outPacket.set_playername(outName);
-	outPacket.set_playermessage(inPacket.playermessage());
+	outPacket->set_playername(outName);
+	outPacket->set_playermessage(inPacket.playermessage());
 
-	GBroadcastManager->BroadcastPacket(&outPacket);
+	GBroadcastManager->BroadcastPacket(outPacket);
 	
 }
 
+REGISTER_HANDLER(PKT_CS_CREATE)
+{
+	CreateResquest inPacket;
+	if(false == inPacket.ParseFromCodedStream(&payloadStream))
+	{
+		LoggerUtil::EventLog("packet parsing error", PKT_CS_CHAT);
+		return;
+	}
+
+	std::string inName = inPacket.playername();
+	std::wstring outName;
+	outName.assign(inName.begin(), inName.end());
+
+	session->mPlayer->DoSync(&Player::RequestCreate,outName.c_str());
+}

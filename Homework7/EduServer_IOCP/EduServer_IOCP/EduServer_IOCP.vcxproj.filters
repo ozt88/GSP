@@ -244,5 +244,8 @@
     <None Include="..\..\Protobuf\MyPacket.proto">
       <Filter>소스 파일\Library\ProtoBuf</Filter>
     </None>
+    <None Include="..\..\SQL\GameDB.sql">
+      <Filter>소스 파일\Contents</Filter>
+    </None>
   </ItemGroup>
 </Project>
