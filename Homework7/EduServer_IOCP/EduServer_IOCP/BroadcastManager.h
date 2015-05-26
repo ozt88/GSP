@@ -2,6 +2,7 @@
 #include "XTL.h"
 #include "FastSpinlock.h"
 #include "google/protobuf/message_lite.h"
+#include "Player.h"
 
 struct PacketHeader;
 class ClientSession;
@@ -13,11 +14,12 @@ public:
 
 	void RegisterClient(ClientSession* client);
 	void UnregisterClient(ClientSession* client);
+	void BroadcastPacket(std::shared_ptr<Player> player, google::protobuf::MessageLite& pkt);
+private:
+	bool IsCloseEnough(ClientSession* lhs, ClientSession* rhs);
 
-	void BroadcastPacket(google::protobuf::MessageLite* pkt);
 private:
 	FastSpinlock mLock;
-
 	xset<ClientSession*>::type mConnectedClientSet;
 	int mCurrentConnectedCount;
 

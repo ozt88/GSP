@@ -11,9 +11,10 @@ public:
 	Player(ClientSession* session);
 	~Player();
 
-	bool IsValid() { return mPlayerId > 0; }
-	int  GetPlayerId() { return mPlayerId;  }
-	std::wstring GetPlayerName(){ return mPlayerName; }
+	bool IsValid() const { return mPlayerId > 0; };
+	bool IsCloseEnough(std::shared_ptr<Player> other) const;
+	int  GetPlayerId() const { return mPlayerId;  }
+	std::wstring GetPlayerName() const { return mPlayerName; }
 
 	void RequestCreate(const wchar_t* name);
 	void ResponseCreate(bool success, int pid, wchar_t* name);

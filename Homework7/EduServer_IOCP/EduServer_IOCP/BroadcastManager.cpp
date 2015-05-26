@@ -4,6 +4,7 @@
 #include "ClientSession.h"
 
 #include "PacketType.h"
+#include "Player.h"
 
 std::shared_ptr<BroadcastManager> GBroadcastManager;
 
@@ -35,20 +36,18 @@ void BroadcastManager::UnregisterClient(ClientSession* client)
 		CRASH_ASSERT(false); ///< 지울게 없는 경우로 쌍이 맞지 않는 경우다
 }
 
-void BroadcastManager::BroadcastPacket(google::protobuf::MessageLite* pkt)
+void BroadcastManager::BroadcastPacket(std::shared_ptr<Player> player, google::protobuf::MessageLite& pkt)
 {
 	FastSpinlockGuard criticalSection(mLock);
-	
-	for (auto it : mConnectedClientSet)
+	for(auto it : mConnectedClientSet)
 	{
-		it->mPlayer;
-
-		if ( false ==  it->SendResponse(MyPacket::PKT_SC_CHAT, *pkt))
+		if(!(it->mPlayer->IsCloseEnough(player)))
+		{
+			continue;
+		}
+		if(false == it->SendResponse(MyPacket::PKT_SC_CHAT, pkt))
 		{
 			it->DisconnectRequest(DR_ACTIVE);
-			delete pkt;
 		}
 	}
-
-	delete pkt;
 }

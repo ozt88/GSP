@@ -233,6 +233,14 @@ void Player::OnTick()
 
 
 
+bool Player::IsCloseEnough(std::shared_ptr<Player> other) const
+{
+	float distanceSquare = pow(mPosX - other->mPosX, 2) + pow(mPosY - other->mPosY, 2) + pow(mPosZ - other->mPosZ, 2);
+	return distanceSquare > 50.f;
+}
+
+
+
 
 // 	class PlayerJob : public std::enable_shared_from_this<PlayerJob>
 // 	{

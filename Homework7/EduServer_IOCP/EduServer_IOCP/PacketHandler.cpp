@@ -132,17 +132,16 @@ REGISTER_HANDLER(PKT_CS_CHAT)
 		EVENT_LOG("PKT_CS_CHAT: invalid player ID", session->mPlayer->GetPlayerId());
 		return;
 	}
-
+		
 	/// chatting의 경우 여기서 바로 방송
-	ChatResult* outPacket = new ChatResult();
+	ChatResult outPacket;
 	std::wstring& inName = session->mPlayer->GetPlayerName();
 	std::string outName;
 	outName.assign(inName.begin(), inName.end());
-	outPacket->set_playername(outName);
-	outPacket->set_playermessage(inPacket.playermessage());
+	outPacket.set_playername(outName);
+	outPacket.set_playermessage(inPacket.playermessage());
 
-	GBroadcastManager->BroadcastPacket(outPacket);
-	
+	GBroadcastManager->BroadcastPacket(session->mPlayer, outPacket);
 }
 
 REGISTER_HANDLER(PKT_CS_CREATE)
