@@ -22,8 +22,10 @@ void protobuf_ShutdownFile_MyPacket_2eproto() {
   delete ChatResult::default_instance_;
   delete MoveRequest::default_instance_;
   delete MoveResult::default_instance_;
-  delete CreateResquest::default_instance_;
+  delete CreateRequest::default_instance_;
   delete CreateResponse::default_instance_;
+  delete LogoutRequest::default_instance_;
+  delete LogoutResult::default_instance_;
 }
 
 #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
@@ -45,8 +47,10 @@ void protobuf_AddDesc_MyPacket_2eproto() {
   ChatResult::default_instance_ = new ChatResult();
   MoveRequest::default_instance_ = new MoveRequest();
   MoveResult::default_instance_ = new MoveResult();
-  CreateResquest::default_instance_ = new CreateResquest();
+  CreateRequest::default_instance_ = new CreateRequest();
   CreateResponse::default_instance_ = new CreateResponse();
+  LogoutRequest::default_instance_ = new LogoutRequest();
+  LogoutResult::default_instance_ = new LogoutResult();
   LoginRequest::default_instance_->InitAsDefaultInstance();
   Position::default_instance_->InitAsDefaultInstance();
   LoginResult::default_instance_->InitAsDefaultInstance();
@@ -54,8 +58,10 @@ void protobuf_AddDesc_MyPacket_2eproto() {
   ChatResult::default_instance_->InitAsDefaultInstance();
   MoveRequest::default_instance_->InitAsDefaultInstance();
   MoveResult::default_instance_->InitAsDefaultInstance();
-  CreateResquest::default_instance_->InitAsDefaultInstance();
+  CreateRequest::default_instance_->InitAsDefaultInstance();
   CreateResponse::default_instance_->InitAsDefaultInstance();
+  LogoutRequest::default_instance_->InitAsDefaultInstance();
+  LogoutResult::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_MyPacket_2eproto);
 }
 
@@ -83,6 +89,8 @@ bool MessageType_IsValid(int value) {
     case 6:
     case 7:
     case 8:
+    case 9:
+    case 10:
       return true;
     default:
       return false;
@@ -1600,34 +1608,34 @@ void MoveResult::Swap(MoveResult* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int CreateResquest::kPlayerNameFieldNumber;
+const int CreateRequest::kPlayerNameFieldNumber;
 #endif  // !_MSC_VER
 
-CreateResquest::CreateResquest()
+CreateRequest::CreateRequest()
   : ::google::protobuf::MessageLite() {
   SharedCtor();
 }
 
-void CreateResquest::InitAsDefaultInstance() {
+void CreateRequest::InitAsDefaultInstance() {
 }
 
-CreateResquest::CreateResquest(const CreateResquest& from)
+CreateRequest::CreateRequest(const CreateRequest& from)
   : ::google::protobuf::MessageLite() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void CreateResquest::SharedCtor() {
+void CreateRequest::SharedCtor() {
   _cached_size_ = 0;
   playername_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-CreateResquest::~CreateResquest() {
+CreateRequest::~CreateRequest() {
   SharedDtor();
 }
 
-void CreateResquest::SharedDtor() {
+void CreateRequest::SharedDtor() {
   if (playername_ != &::google::protobuf::internal::kEmptyString) {
     delete playername_;
   }
@@ -1639,12 +1647,12 @@ void CreateResquest::SharedDtor() {
   }
 }
 
-void CreateResquest::SetCachedSize(int size) const {
+void CreateRequest::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const CreateResquest& CreateResquest::default_instance() {
+const CreateRequest& CreateRequest::default_instance() {
 #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
   protobuf_AddDesc_MyPacket_2eproto();
 #else
@@ -1653,13 +1661,13 @@ const CreateResquest& CreateResquest::default_instance() {
   return *default_instance_;
 }
 
-CreateResquest* CreateResquest::default_instance_ = NULL;
+CreateRequest* CreateRequest::default_instance_ = NULL;
 
-CreateResquest* CreateResquest::New() const {
-  return new CreateResquest;
+CreateRequest* CreateRequest::New() const {
+  return new CreateRequest;
 }
 
-void CreateResquest::Clear() {
+void CreateRequest::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_playername()) {
       if (playername_ != &::google::protobuf::internal::kEmptyString) {
@@ -1670,7 +1678,7 @@ void CreateResquest::Clear() {
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-bool CreateResquest::MergePartialFromCodedStream(
+bool CreateRequest::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
@@ -1704,7 +1712,7 @@ bool CreateResquest::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void CreateResquest::SerializeWithCachedSizes(
+void CreateRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // required string PlayerName = 1;
   if (has_playername()) {
@@ -1714,7 +1722,7 @@ void CreateResquest::SerializeWithCachedSizes(
 
 }
 
-int CreateResquest::ByteSize() const {
+int CreateRequest::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -1732,12 +1740,12 @@ int CreateResquest::ByteSize() const {
   return total_size;
 }
 
-void CreateResquest::CheckTypeAndMergeFrom(
+void CreateRequest::CheckTypeAndMergeFrom(
     const ::google::protobuf::MessageLite& from) {
-  MergeFrom(*::google::protobuf::down_cast<const CreateResquest*>(&from));
+  MergeFrom(*::google::protobuf::down_cast<const CreateRequest*>(&from));
 }
 
-void CreateResquest::MergeFrom(const CreateResquest& from) {
+void CreateRequest::MergeFrom(const CreateRequest& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_playername()) {
@@ -1746,19 +1754,19 @@ void CreateResquest::MergeFrom(const CreateResquest& from) {
   }
 }
 
-void CreateResquest::CopyFrom(const CreateResquest& from) {
+void CreateRequest::CopyFrom(const CreateRequest& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool CreateResquest::IsInitialized() const {
+bool CreateRequest::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   return true;
 }
 
-void CreateResquest::Swap(CreateResquest* other) {
+void CreateRequest::Swap(CreateRequest* other) {
   if (other != this) {
     std::swap(playername_, other->playername_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -1766,8 +1774,8 @@ void CreateResquest::Swap(CreateResquest* other) {
   }
 }
 
-::std::string CreateResquest::GetTypeName() const {
-  return "MyPacket.CreateResquest";
+::std::string CreateRequest::GetTypeName() const {
+  return "MyPacket.CreateRequest";
 }
 
 
@@ -1936,6 +1944,342 @@ void CreateResponse::Swap(CreateResponse* other) {
 
 ::std::string CreateResponse::GetTypeName() const {
   return "MyPacket.CreateResponse";
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int LogoutRequest::kPlayerIdFieldNumber;
+#endif  // !_MSC_VER
+
+LogoutRequest::LogoutRequest()
+  : ::google::protobuf::MessageLite() {
+  SharedCtor();
+}
+
+void LogoutRequest::InitAsDefaultInstance() {
+}
+
+LogoutRequest::LogoutRequest(const LogoutRequest& from)
+  : ::google::protobuf::MessageLite() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void LogoutRequest::SharedCtor() {
+  _cached_size_ = 0;
+  playerid_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+LogoutRequest::~LogoutRequest() {
+  SharedDtor();
+}
+
+void LogoutRequest::SharedDtor() {
+  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
+  if (this != &default_instance()) {
+  #else
+  if (this != default_instance_) {
+  #endif
+  }
+}
+
+void LogoutRequest::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const LogoutRequest& LogoutRequest::default_instance() {
+#ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
+  protobuf_AddDesc_MyPacket_2eproto();
+#else
+  if (default_instance_ == NULL) protobuf_AddDesc_MyPacket_2eproto();
+#endif
+  return *default_instance_;
+}
+
+LogoutRequest* LogoutRequest::default_instance_ = NULL;
+
+LogoutRequest* LogoutRequest::New() const {
+  return new LogoutRequest;
+}
+
+void LogoutRequest::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    playerid_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+bool LogoutRequest::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required int32 PlayerId = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &playerid_)));
+          set_has_playerid();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void LogoutRequest::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required int32 PlayerId = 1;
+  if (has_playerid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->playerid(), output);
+  }
+
+}
+
+int LogoutRequest::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required int32 PlayerId = 1;
+    if (has_playerid()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->playerid());
+    }
+
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void LogoutRequest::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const LogoutRequest*>(&from));
+}
+
+void LogoutRequest::MergeFrom(const LogoutRequest& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_playerid()) {
+      set_playerid(from.playerid());
+    }
+  }
+}
+
+void LogoutRequest::CopyFrom(const LogoutRequest& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool LogoutRequest::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+
+  return true;
+}
+
+void LogoutRequest::Swap(LogoutRequest* other) {
+  if (other != this) {
+    std::swap(playerid_, other->playerid_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::std::string LogoutRequest::GetTypeName() const {
+  return "MyPacket.LogoutRequest";
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int LogoutResult::kPlayerIdFieldNumber;
+#endif  // !_MSC_VER
+
+LogoutResult::LogoutResult()
+  : ::google::protobuf::MessageLite() {
+  SharedCtor();
+}
+
+void LogoutResult::InitAsDefaultInstance() {
+}
+
+LogoutResult::LogoutResult(const LogoutResult& from)
+  : ::google::protobuf::MessageLite() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void LogoutResult::SharedCtor() {
+  _cached_size_ = 0;
+  playerid_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+LogoutResult::~LogoutResult() {
+  SharedDtor();
+}
+
+void LogoutResult::SharedDtor() {
+  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
+  if (this != &default_instance()) {
+  #else
+  if (this != default_instance_) {
+  #endif
+  }
+}
+
+void LogoutResult::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const LogoutResult& LogoutResult::default_instance() {
+#ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
+  protobuf_AddDesc_MyPacket_2eproto();
+#else
+  if (default_instance_ == NULL) protobuf_AddDesc_MyPacket_2eproto();
+#endif
+  return *default_instance_;
+}
+
+LogoutResult* LogoutResult::default_instance_ = NULL;
+
+LogoutResult* LogoutResult::New() const {
+  return new LogoutResult;
+}
+
+void LogoutResult::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    playerid_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+bool LogoutResult::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required int32 PlayerId = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &playerid_)));
+          set_has_playerid();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void LogoutResult::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required int32 PlayerId = 1;
+  if (has_playerid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->playerid(), output);
+  }
+
+}
+
+int LogoutResult::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required int32 PlayerId = 1;
+    if (has_playerid()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->playerid());
+    }
+
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void LogoutResult::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const LogoutResult*>(&from));
+}
+
+void LogoutResult::MergeFrom(const LogoutResult& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_playerid()) {
+      set_playerid(from.playerid());
+    }
+  }
+}
+
+void LogoutResult::CopyFrom(const LogoutResult& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool LogoutResult::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+
+  return true;
+}
+
+void LogoutResult::Swap(LogoutResult* other) {
+  if (other != this) {
+    std::swap(playerid_, other->playerid_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::std::string LogoutResult::GetTypeName() const {
+  return "MyPacket.LogoutResult";
 }
 
 

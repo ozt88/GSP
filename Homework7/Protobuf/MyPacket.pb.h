@@ -39,8 +39,10 @@ class ChatRequest;
 class ChatResult;
 class MoveRequest;
 class MoveResult;
-class CreateResquest;
+class CreateRequest;
 class CreateResponse;
+class LogoutRequest;
+class LogoutResult;
 
 enum MessageType {
   PKT_CS_LOGIN = 1,
@@ -50,11 +52,13 @@ enum MessageType {
   PKT_CS_MOVE = 5,
   PKT_SC_MOVE = 6,
   PKT_CS_CREATE = 7,
-  PKT_SC_CREATE = 8
+  PKT_SC_CREATE = 8,
+  PKT_CS_LOGOUT = 9,
+  PKT_SC_LOGOUT = 10
 };
 bool MessageType_IsValid(int value);
 const MessageType MessageType_MIN = PKT_CS_LOGIN;
-const MessageType MessageType_MAX = PKT_SC_CREATE;
+const MessageType MessageType_MAX = PKT_SC_LOGOUT;
 const int MessageType_ARRAYSIZE = MessageType_MAX + 1;
 
 // ===================================================================
@@ -746,38 +750,38 @@ class MoveResult : public ::google::protobuf::MessageLite {
 };
 // -------------------------------------------------------------------
 
-class CreateResquest : public ::google::protobuf::MessageLite {
+class CreateRequest : public ::google::protobuf::MessageLite {
  public:
-  CreateResquest();
-  virtual ~CreateResquest();
+  CreateRequest();
+  virtual ~CreateRequest();
 
-  CreateResquest(const CreateResquest& from);
+  CreateRequest(const CreateRequest& from);
 
-  inline CreateResquest& operator=(const CreateResquest& from) {
+  inline CreateRequest& operator=(const CreateRequest& from) {
     CopyFrom(from);
     return *this;
   }
 
-  static const CreateResquest& default_instance();
+  static const CreateRequest& default_instance();
 
   #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
   // Returns the internal default instance pointer. This function can
   // return NULL thus should not be used by the user. This is intended
   // for Protobuf internal code. Please use default_instance() declared
   // above instead.
-  static inline const CreateResquest* internal_default_instance() {
+  static inline const CreateRequest* internal_default_instance() {
     return default_instance_;
   }
   #endif
 
-  void Swap(CreateResquest* other);
+  void Swap(CreateRequest* other);
 
   // implements Message ----------------------------------------------
 
-  CreateResquest* New() const;
+  CreateRequest* New() const;
   void CheckTypeAndMergeFrom(const ::google::protobuf::MessageLite& from);
-  void CopyFrom(const CreateResquest& from);
-  void MergeFrom(const CreateResquest& from);
+  void CopyFrom(const CreateRequest& from);
+  void MergeFrom(const CreateRequest& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -811,7 +815,7 @@ class CreateResquest : public ::google::protobuf::MessageLite {
   inline ::std::string* release_playername();
   inline void set_allocated_playername(::std::string* playername);
 
-  // @@protoc_insertion_point(class_scope:MyPacket.CreateResquest)
+  // @@protoc_insertion_point(class_scope:MyPacket.CreateRequest)
  private:
   inline void set_has_playername();
   inline void clear_has_playername();
@@ -830,7 +834,7 @@ class CreateResquest : public ::google::protobuf::MessageLite {
   friend void protobuf_ShutdownFile_MyPacket_2eproto();
 
   void InitAsDefaultInstance();
-  static CreateResquest* default_instance_;
+  static CreateRequest* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -914,6 +918,172 @@ class CreateResponse : public ::google::protobuf::MessageLite {
 
   void InitAsDefaultInstance();
   static CreateResponse* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class LogoutRequest : public ::google::protobuf::MessageLite {
+ public:
+  LogoutRequest();
+  virtual ~LogoutRequest();
+
+  LogoutRequest(const LogoutRequest& from);
+
+  inline LogoutRequest& operator=(const LogoutRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const LogoutRequest& default_instance();
+
+  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
+  // Returns the internal default instance pointer. This function can
+  // return NULL thus should not be used by the user. This is intended
+  // for Protobuf internal code. Please use default_instance() declared
+  // above instead.
+  static inline const LogoutRequest* internal_default_instance() {
+    return default_instance_;
+  }
+  #endif
+
+  void Swap(LogoutRequest* other);
+
+  // implements Message ----------------------------------------------
+
+  LogoutRequest* New() const;
+  void CheckTypeAndMergeFrom(const ::google::protobuf::MessageLite& from);
+  void CopyFrom(const LogoutRequest& from);
+  void MergeFrom(const LogoutRequest& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::std::string GetTypeName() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 PlayerId = 1;
+  inline bool has_playerid() const;
+  inline void clear_playerid();
+  static const int kPlayerIdFieldNumber = 1;
+  inline ::google::protobuf::int32 playerid() const;
+  inline void set_playerid(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:MyPacket.LogoutRequest)
+ private:
+  inline void set_has_playerid();
+  inline void clear_has_playerid();
+
+  ::google::protobuf::int32 playerid_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
+  friend void  protobuf_AddDesc_MyPacket_2eproto_impl();
+  #else
+  friend void  protobuf_AddDesc_MyPacket_2eproto();
+  #endif
+  friend void protobuf_AssignDesc_MyPacket_2eproto();
+  friend void protobuf_ShutdownFile_MyPacket_2eproto();
+
+  void InitAsDefaultInstance();
+  static LogoutRequest* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class LogoutResult : public ::google::protobuf::MessageLite {
+ public:
+  LogoutResult();
+  virtual ~LogoutResult();
+
+  LogoutResult(const LogoutResult& from);
+
+  inline LogoutResult& operator=(const LogoutResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const LogoutResult& default_instance();
+
+  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
+  // Returns the internal default instance pointer. This function can
+  // return NULL thus should not be used by the user. This is intended
+  // for Protobuf internal code. Please use default_instance() declared
+  // above instead.
+  static inline const LogoutResult* internal_default_instance() {
+    return default_instance_;
+  }
+  #endif
+
+  void Swap(LogoutResult* other);
+
+  // implements Message ----------------------------------------------
+
+  LogoutResult* New() const;
+  void CheckTypeAndMergeFrom(const ::google::protobuf::MessageLite& from);
+  void CopyFrom(const LogoutResult& from);
+  void MergeFrom(const LogoutResult& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::std::string GetTypeName() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 PlayerId = 1;
+  inline bool has_playerid() const;
+  inline void clear_playerid();
+  static const int kPlayerIdFieldNumber = 1;
+  inline ::google::protobuf::int32 playerid() const;
+  inline void set_playerid(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:MyPacket.LogoutResult)
+ private:
+  inline void set_has_playerid();
+  inline void clear_has_playerid();
+
+  ::google::protobuf::int32 playerid_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
+  friend void  protobuf_AddDesc_MyPacket_2eproto_impl();
+  #else
+  friend void  protobuf_AddDesc_MyPacket_2eproto();
+  #endif
+  friend void protobuf_AssignDesc_MyPacket_2eproto();
+  friend void protobuf_ShutdownFile_MyPacket_2eproto();
+
+  void InitAsDefaultInstance();
+  static LogoutResult* default_instance_;
 };
 // ===================================================================
 
@@ -1530,56 +1700,56 @@ inline void MoveResult::set_allocated_playerpos(::MyPacket::Position* playerpos)
 
 // -------------------------------------------------------------------
 
-// CreateResquest
+// CreateRequest
 
 // required string PlayerName = 1;
-inline bool CreateResquest::has_playername() const {
+inline bool CreateRequest::has_playername() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void CreateResquest::set_has_playername() {
+inline void CreateRequest::set_has_playername() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void CreateResquest::clear_has_playername() {
+inline void CreateRequest::clear_has_playername() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void CreateResquest::clear_playername() {
+inline void CreateRequest::clear_playername() {
   if (playername_ != &::google::protobuf::internal::kEmptyString) {
     playername_->clear();
   }
   clear_has_playername();
 }
-inline const ::std::string& CreateResquest::playername() const {
+inline const ::std::string& CreateRequest::playername() const {
   return *playername_;
 }
-inline void CreateResquest::set_playername(const ::std::string& value) {
+inline void CreateRequest::set_playername(const ::std::string& value) {
   set_has_playername();
   if (playername_ == &::google::protobuf::internal::kEmptyString) {
     playername_ = new ::std::string;
   }
   playername_->assign(value);
 }
-inline void CreateResquest::set_playername(const char* value) {
+inline void CreateRequest::set_playername(const char* value) {
   set_has_playername();
   if (playername_ == &::google::protobuf::internal::kEmptyString) {
     playername_ = new ::std::string;
   }
   playername_->assign(value);
 }
-inline void CreateResquest::set_playername(const char* value, size_t size) {
+inline void CreateRequest::set_playername(const char* value, size_t size) {
   set_has_playername();
   if (playername_ == &::google::protobuf::internal::kEmptyString) {
     playername_ = new ::std::string;
   }
   playername_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* CreateResquest::mutable_playername() {
+inline ::std::string* CreateRequest::mutable_playername() {
   set_has_playername();
   if (playername_ == &::google::protobuf::internal::kEmptyString) {
     playername_ = new ::std::string;
   }
   return playername_;
 }
-inline ::std::string* CreateResquest::release_playername() {
+inline ::std::string* CreateRequest::release_playername() {
   clear_has_playername();
   if (playername_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1589,7 +1759,7 @@ inline ::std::string* CreateResquest::release_playername() {
     return temp;
   }
 }
-inline void CreateResquest::set_allocated_playername(::std::string* playername) {
+inline void CreateRequest::set_allocated_playername(::std::string* playername) {
   if (playername_ != &::google::protobuf::internal::kEmptyString) {
     delete playername_;
   }
@@ -1624,6 +1794,58 @@ inline ::google::protobuf::int32 CreateResponse::playerid() const {
   return playerid_;
 }
 inline void CreateResponse::set_playerid(::google::protobuf::int32 value) {
+  set_has_playerid();
+  playerid_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// LogoutRequest
+
+// required int32 PlayerId = 1;
+inline bool LogoutRequest::has_playerid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void LogoutRequest::set_has_playerid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void LogoutRequest::clear_has_playerid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void LogoutRequest::clear_playerid() {
+  playerid_ = 0;
+  clear_has_playerid();
+}
+inline ::google::protobuf::int32 LogoutRequest::playerid() const {
+  return playerid_;
+}
+inline void LogoutRequest::set_playerid(::google::protobuf::int32 value) {
+  set_has_playerid();
+  playerid_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// LogoutResult
+
+// required int32 PlayerId = 1;
+inline bool LogoutResult::has_playerid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void LogoutResult::set_has_playerid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void LogoutResult::clear_has_playerid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void LogoutResult::clear_playerid() {
+  playerid_ = 0;
+  clear_has_playerid();
+}
+inline ::google::protobuf::int32 LogoutResult::playerid() const {
+  return playerid_;
+}
+inline void LogoutResult::set_playerid(::google::protobuf::int32 value) {
   set_has_playerid();
   playerid_ = value;
 }

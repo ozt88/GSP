@@ -92,6 +92,9 @@ void Player::ResponseLoad(bool success, int pid, float x, float y, float z, bool
 		std::wstring inName = mPlayerName;
 		outName.assign(inName.begin(), inName.end());
 
+		//Login Validation false;
+		RequestUpdateValidation(false);
+
 		DoSyncAfter(HEART_BEAT, GetSharedFromThis<Player>(), &Player::OnTick);
 	}
 	else
@@ -195,13 +198,31 @@ void Player::RequestUpdateValidation(bool isValid)
 
 void Player::ResponseUpdateValidation(bool success, bool isValid)
 {
-	if(success)
+	if(isValid == true)
 	{
-		isValid = false;
+		ResponseLogout(success);
 	}
-	mIsValid = isValid;
 }
 
+
+void Player::RequestLogout()
+{
+	RequestUpdateValidation(true);
+}
+
+void Player::ResponseLogout(bool success)
+{
+	LogoutResult outPacket;
+	if(success)
+	{
+		outPacket.set_playerid(mPlayerId);
+	}
+	else
+	{
+		outPacket.set_playerid(-1);
+	}
+	mSession->SendResponse(PKT_SC_LOGOUT, outPacket);
+}
 
 void Player::TestCreatePlayerData(const wchar_t* newName)
 {
@@ -236,7 +257,7 @@ void Player::OnTick()
 bool Player::IsCloseEnough(std::shared_ptr<Player> other) const
 {
 	float distanceSquare = pow(mPosX - other->mPosX, 2) + pow(mPosY - other->mPosY, 2) + pow(mPosZ - other->mPosZ, 2);
-	return distanceSquare > 50.f;
+	return distanceSquare > 10.f;
 }
 
 

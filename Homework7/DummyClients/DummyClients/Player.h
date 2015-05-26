@@ -22,7 +22,7 @@ public:
 		return mPlayerName;
 	}
 
-	void RandomMove();
+	void Move();
 	void RandomChat();
 
 	void RequestLogin();
@@ -37,6 +37,9 @@ public:
 	void RequestChat(const std::string& message);
 	void ResponseChat(bool success, const std::string& name, const std::string& message);
 
+	void RequestLogout();
+	void ResponseLogout(bool success);
+
 	void OnTick();
 
 private:
@@ -47,7 +50,13 @@ private:
 	float mPosX = 0.f;
 	float mPosY = 0.f;
 	float mPosZ = 0.f;
+
+	float mVecX = 0.f;
+	float mVecY = 0.f;
+	float mVecZ = 0.f;
+
 	bool mIsValid = false;
+	unsigned int mChatCount = 0;
 	std::string mPlayerName;
 	std::string mComment;
 

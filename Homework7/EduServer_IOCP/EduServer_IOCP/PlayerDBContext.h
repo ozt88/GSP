@@ -106,7 +106,7 @@ struct UpdatePlayerValidContext : public DatabaseJobContext, public ObjectPool<U
 
 	virtual bool OnSQLExecute();
 	virtual void OnSuccess();
-	virtual void OnFail() {}
+	virtual void OnFail();
 
 	int		mPlayerId = -1;
 	bool	mIsValid;

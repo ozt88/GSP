@@ -19,7 +19,11 @@ Player::~Player()
 void Player::RequestLogin()
 {
 	static int id = 300;
-	mPlayerId = id++;
+	if(mPlayerId == -1)
+	{
+		mPlayerId = id++;
+	}
+	mPlayerName = "USA" + std::to_string(mPlayerId);
 	MyPacket::LoginRequest loginRequest;
 	loginRequest.set_playerid(mPlayerId);
 
@@ -34,6 +38,11 @@ void Player::ResponseLogin(bool success, int pid, float x, float y, float z, con
 		mPosX = x;
 		mPosY = y;
 		mPosZ = z;
+		
+		mVecX = rand() + pid*1 % 100 - 50;
+		mVecY = rand() + pid*2 % 100 - 50;
+		mVecZ = rand() + pid*3 % 100 - 50;
+
 		mPlayerName = name;
 
 		std::stringstream reslog;
@@ -48,7 +57,7 @@ void Player::ResponseLogin(bool success, int pid, float x, float y, float z, con
 	else
 	{
 		//이름 넣어서 새로가입
-		RequestSignIn("USA");
+		RequestSignIn(mPlayerName);
 	}
 }
 
@@ -56,7 +65,7 @@ void Player::ResponseLogin(bool success, int pid, float x, float y, float z, con
 void Player::RequestSignIn(const std::string& playerName)
 {
 	mPlayerName = playerName;
-	MyPacket::CreateResquest createRequest;
+	MyPacket::CreateRequest createRequest;
 	createRequest.set_playername(playerName);
 
 	mSession->SendRequest(MyPacket::PKT_CS_CREATE, createRequest);
@@ -84,7 +93,7 @@ void Player::OnTick()
 	if(!IsValid())
 		return;
 
-	RandomMove();
+	Move();
 	RandomChat();
 
 	DoSyncAfter(HEART_BEAT, GetSharedFromThis<Player>(), &Player::OnTick);
@@ -97,6 +106,7 @@ void Player::PlayerReset()
 	mPlayerId = -1;
 	mIsValid = false;
 	mPosX = mPosY = mPosZ = 0;
+	mChatCount = 0;
 }
 
 void Player::RequestMove(float x, float y, float z)
@@ -161,18 +171,52 @@ void Player::ResponseChat(bool success, const std::string& name, const std::stri
 }
 
 
-void Player::RandomMove()
+void Player::Move()
 {
-	float newX = (float) ( rand() % 1000 ) / 10.f;
-	float newY = (float) ( rand() % 1000 ) / 10.f;
-	float newZ = (float) ( rand() % 1000 ) / 10.f;
+	if(mPosX > 500.f || mPosX < -500.f)
+	{
+		mVecX *= -1;
+	}
+	if(mPosY > 500.f || mPosY < -500.f)
+	{
+		mVecY *= -1;
+	}
+	if(mPosZ > 500.f || mPosZ < -500.f)
+	{
+		mVecZ *= -1;
+	}
+
+	float newX = mPosX + mVecX;
+	float newY = mPosY + mVecY;
+	float newZ = mPosZ + mVecZ;
 
 	RequestMove(newX, newY, newZ);
 }
 
 void Player::RandomChat()
 {
-	int randomNum = rand() % 10000;
-	std::string message = std::to_string(randomNum);
-	RequestChat(message);
+	if(mChatCount++ < 100)
+	{
+		std::stringstream messageStream;
+		messageStream << "I said " << mChatCount << " words.";
+		std::string message = messageStream.str();
+		RequestChat(message);
+	}
+	else
+	{
+		RequestLogout();
+	}
+}
+
+void Player::RequestLogout()
+{
+	MyPacket::LogoutRequest logoutRequest;
+	logoutRequest.set_playerid(mPlayerId);
+	mPlayerId = -1;
+	mSession->SendRequest(MyPacket::PKT_CS_LOGOUT, logoutRequest);
+}
+
+void Player::ResponseLogout(bool success)
+{
+	mSession->DisconnectRequest(DR_NONE);
 }

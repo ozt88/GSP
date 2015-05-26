@@ -146,7 +146,7 @@ REGISTER_HANDLER(PKT_CS_CHAT)
 
 REGISTER_HANDLER(PKT_CS_CREATE)
 {
-	CreateResquest inPacket;
+	CreateRequest inPacket;
 	if(false == inPacket.ParseFromCodedStream(&payloadStream))
 	{
 		LoggerUtil::EventLog("packet parsing error", PKT_CS_CHAT);
@@ -158,4 +158,16 @@ REGISTER_HANDLER(PKT_CS_CREATE)
 	outName.assign(inName.begin(), inName.end());
 
 	session->mPlayer->DoSync(&Player::RequestCreate,outName.c_str());
+}
+
+REGISTER_HANDLER(PKT_CS_LOGOUT)
+{
+	LogoutResult inPacket;
+	if(false == inPacket.ParseFromCodedStream(&payloadStream))
+	{
+		LoggerUtil::EventLog("packet parsing error", PKT_CS_LOGOUT);
+		return;
+	}
+
+	session->mPlayer->DoSync(&Player::RequestLogout);
 }

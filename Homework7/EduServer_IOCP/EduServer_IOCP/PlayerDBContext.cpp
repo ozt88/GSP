@@ -109,8 +109,14 @@ bool LoadPlayerDataContext::OnSQLExecute()
 
 void LoadPlayerDataContext::OnSuccess()
 {
-	//mSessionObject->mPlayer->ResponseLoad(mPlayerId, mPosX, mPosY, mPosZ, mIsValid, mPlayerName, mComment);
-	mSessionObject->mPlayer->DoSync(&Player::ResponseLoad, true, mPlayerId, mPosX, mPosY, mPosZ, mIsValid, mPlayerName, mComment);
+	//이미 접속한 사람인지 체크
+	if(mIsValid)
+	{
+		mSessionObject->mPlayer->DoSync(&Player::ResponseLoad, true, mPlayerId, mPosX, mPosY, mPosZ, mIsValid, mPlayerName, mComment);
+	}
+	else{
+		mSessionObject->mPlayer->DoSync(&Player::ResponseLoad, false, mPlayerId, mPosX, mPosY, mPosZ, mIsValid, mPlayerName, mComment);
+	}
 }
 
 void LoadPlayerDataContext::OnFail()
@@ -121,9 +127,6 @@ void LoadPlayerDataContext::OnFail()
 
 	EVENT_LOG(logErr.c_str(), mPlayerId);
 	std::cout << logErr;
-
-	//실패시 ID = -1로 해서 클라이언트에게 전송한다.
-	mPlayerId = -1;
 	mSessionObject->mPlayer->DoSync(&Player::ResponseLoad, false, mPlayerId, mPosX, mPosY, mPosZ, mIsValid, mPlayerName, mComment);
 }
 
@@ -222,6 +225,11 @@ void UpdatePlayerValidContext::OnSuccess()
 {
 	//mSessionObject->mPlayer->ResponseUpdateValidation(mIsValid);
 	mSessionObject->mPlayer->DoSync(&Player::ResponseUpdateValidation, true, mIsValid);
+}
+
+void UpdatePlayerValidContext::OnFail()
+{
+	mSessionObject->mPlayer->DoSync(&Player::ResponseUpdateValidation, false, mIsValid);
 }
 
 

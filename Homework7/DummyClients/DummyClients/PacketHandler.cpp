@@ -146,6 +146,19 @@ REGISTER_HANDLER(PKT_SC_CHAT)
 		return;
 	}
 
-	bool success = session->mPlayer->GetPlayerName() == chatResult.playername();
+	bool success = true;
 	session->mPlayer->ResponseChat(success, chatResult.playername(), chatResult.playermessage());
+}
+
+REGISTER_HANDLER(PKT_SC_LOGOUT)
+{
+	LogoutResult logoutResult;
+	if(false == logoutResult.ParseFromCodedStream(&payloadStream))
+	{
+		session->DisconnectRequest(DR_ACTIVE);
+		return;
+	}
+
+	bool success = session->mPlayer->GetPlayerId() == logoutResult.playerid();
+	session->mPlayer->ResponseLogout(success);
 }

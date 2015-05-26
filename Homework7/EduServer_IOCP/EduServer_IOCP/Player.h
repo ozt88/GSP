@@ -31,6 +31,9 @@ public:
 	void RequestUpdateValidation(bool isValid);
 	void ResponseUpdateValidation(bool success, bool isValid);
 
+	void RequestLogout();
+	void ResponseLogout(bool success);
+
 	void OnTick(); ///< 로그인후 1초마다 불리는 기능
 
 private:

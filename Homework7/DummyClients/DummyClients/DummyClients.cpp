@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 {
 	LThreadType = THREAD_MAIN;
 
-	MAX_CONNECTION = 100;
+	MAX_CONNECTION = 5;
 	strcpy_s(CONNECT_ADDR, "10.73.44.30");
 	CONNECT_PORT = 9991;
 
