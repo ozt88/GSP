@@ -154,7 +154,6 @@ bool DummyClientSession::SendRequest(short packetType, const protobuf::MessageLi
 
 	/// flush later...
 	LSendRequestSessionList->push_back(this);
-
 	mSendBuffer.Commit(totalSize);
 
 	return true;

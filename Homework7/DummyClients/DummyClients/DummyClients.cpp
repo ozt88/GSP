@@ -28,8 +28,8 @@ int main(int argc, char* argv[])
 {
 	LThreadType = THREAD_MAIN;
 
-	MAX_CONNECTION = 10;
-	strcpy_s(CONNECT_ADDR, "127.0.0.1");
+	MAX_CONNECTION = 100;
+	strcpy_s(CONNECT_ADDR, "10.73.44.30");
 	CONNECT_PORT = 9991;
 
 	if ( argc < 2 )

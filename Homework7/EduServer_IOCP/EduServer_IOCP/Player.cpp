@@ -51,6 +51,13 @@ void Player::ResponseCreate(bool success, int pid, wchar_t* name)
 	{
 		outPacket.set_playerid(-1);
 	}
+
+	std::stringstream reslog;
+	reslog << "LOG: ResponseCreate : PID[" << pid << "], NAME[" << name << "], SUCCESS[" << success << "]" << std::endl;
+	std::string logString = reslog.str();
+	EVENT_LOG(logString.c_str(), 0);
+	std::cout << logString;
+
 	mSession->SendResponse(PKT_SC_CREATE, outPacket);
 }
 
